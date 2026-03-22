@@ -60,7 +60,7 @@ const seed = async () => {
   const admin = await User.create({
     username: 'admin',
     email: 'admin@ojss.local',
-    fullName: 'System Administrator',
+    fullName: 'Quản trị viên hệ thống',
     passwordHash: adminPassword,
     gender: 'other',
     role: 'admin',
@@ -72,7 +72,7 @@ const seed = async () => {
     const enterpriseUser = await User.create({
       username: `enterprise${index}`,
       email: `enterprise${index}@ojss.local`,
-      fullName: `Enterprise Manager ${index}`,
+      fullName: `Quản lý doanh nghiệp ${index}`,
       passwordHash: enterprisePassword,
       gender: 'other',
       role: 'enterprise',
@@ -84,10 +84,10 @@ const seed = async () => {
       companyName: `TalentWave ${index}`,
       companyEmail: `hiring${index}@talentwave.com`,
       companyPhone: `09000000${index}`,
-      companyAddress: `${index * 12} Nguyen Hue, Ho Chi Minh City`,
+      companyAddress: `${index * 12} Nguyễn Huệ, Thành phố Hồ Chí Minh`,
       taxCode: `TAX00${index}VN`,
       website: `https://talentwave${index}.example.com`,
-      description: `TalentWave ${index} builds digital recruitment products and engineering teams.`,
+      description: `TalentWave ${index} phát triển sản phẩm tuyển dụng số và xây dựng đội ngũ công nghệ chất lượng cao.`,
       verificationStatus: 'verified',
       accountPlan: index === 1 ? 'premium' : 'free',
     });
@@ -100,22 +100,22 @@ const seed = async () => {
     const user = await User.create({
       username: `jobseeker${index}`,
       email: `jobseeker${index}@ojss.local`,
-      fullName: `Job Seeker ${index}`,
+      fullName: `Ứng viên ${index}`,
       passwordHash: jobSeekerPassword,
       gender: index % 2 === 0 ? 'female' : 'male',
       role: 'jobseeker',
       isEmailVerified: true,
       phone: `09123456${`${index}`.padStart(2, '0')}`,
-      address: `District ${((index - 1) % 5) + 1}, Ho Chi Minh City`,
+      address: `Quận ${((index - 1) % 5) + 1}, Thành phố Hồ Chí Minh`,
     });
 
     const profile = await JobSeekerProfile.create({
       userId: user._id,
       dateOfBirth: new Date(1995, index % 12, index),
       experienceYears: index % 6,
-      skills: [tagSeeds[index % tagSeeds.length], tagSeeds[(index + 2) % tagSeeds.length], 'Communication'],
-      education: `Bachelor of Computer Science ${index}`,
-      summary: `Motivated candidate ${index} looking for engineering and product opportunities.`,
+      skills: [tagSeeds[index % tagSeeds.length], tagSeeds[(index + 2) % tagSeeds.length], 'Giao tiếp'],
+      education: `Cử nhân Công nghệ thông tin ${index}`,
+      summary: `Ứng viên ${index} đang tìm kiếm cơ hội phát triển trong lĩnh vực công nghệ, sản phẩm và tuyển dụng số.`,
       cvFileUrl: `/uploads/cvs/sample-jobseeker-${index}.pdf`,
       favouriteTags: [tagSeeds[index % tagSeeds.length], tagSeeds[(index + 1) % tagSeeds.length]],
       profileCompleted: true,
@@ -128,7 +128,7 @@ const seed = async () => {
     tagSeeds.map((name) => ({
       name,
       slug: name.toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-      description: `${name} related opportunities`,
+      description: `Cơ hội việc làm liên quan đến ${name}`,
       isActive: true,
     })),
   );
@@ -145,12 +145,12 @@ const seed = async () => {
 
     const job = await Job.create({
       enterpriseId: enterprise.user._id,
-      title: `${tagSeeds[index % tagSeeds.length]} Specialist ${index}`,
-      overview: `Work on ${tagSeeds[index % tagSeeds.length]} initiatives with modern product teams.`,
-      description: `This role focuses on delivery, collaboration, and measurable hiring outcomes for position ${index}.`,
-      requirements: [`${tagSeeds[index % tagSeeds.length]} experience`, 'Problem solving', 'Team communication'],
-      benefits: ['Hybrid work', 'Healthcare', 'Quarterly bonus'],
-      location: index % 2 === 0 ? 'Ho Chi Minh City' : 'Ha Noi',
+      title: `Chuyên viên ${tagSeeds[index % tagSeeds.length]} ${index}`,
+      overview: `Tham gia các dự án ${tagSeeds[index % tagSeeds.length]} cùng đội ngũ sản phẩm và kỹ thuật hiện đại.`,
+      description: `Vị trí này tập trung vào khả năng triển khai công việc, phối hợp liên phòng ban và tạo ra kết quả tuyển dụng rõ ràng cho đợt tuyển ${index}.`,
+      requirements: [`Có kinh nghiệm với ${tagSeeds[index % tagSeeds.length]}`, 'Tư duy giải quyết vấn đề', 'Kỹ năng giao tiếp và làm việc nhóm'],
+      benefits: ['Mô hình làm việc linh hoạt', 'Bảo hiểm sức khỏe', 'Thưởng theo quý'],
+      location: index % 2 === 0 ? 'Thành phố Hồ Chí Minh' : 'Hà Nội',
       salaryMin: 700 + index * 20,
       salaryMax: 1200 + index * 25,
       currency: 'USD',
@@ -167,7 +167,7 @@ const seed = async () => {
           ? {
               reviewedBy: admin._id,
               reviewedAt: new Date(),
-              note: status === 'Published' ? 'Approved for publication' : 'Please tighten the job scope',
+              note: status === 'Published' ? 'Đã duyệt để đăng công khai' : 'Vui lòng điều chỉnh lại phạm vi công việc',
             }
           : {},
       deletedAt: status === 'Deleted' ? new Date() : null,
@@ -198,7 +198,7 @@ const seed = async () => {
       enterpriseId: job.enterpriseId,
       jobSeekerId: candidate.user._id,
       cvFileUrl: candidate.profile.cvFileUrl,
-      coverLetter: `I am interested in ${job.title}.`,
+      coverLetter: `Tôi quan tâm đến vị trí ${job.title} và mong muốn được đồng hành cùng doanh nghiệp.`,
       status,
       appliedAt: new Date(Date.now() - index * 86400000),
       withdrawnAt: status === 'Withdrawn' ? new Date() : null,
@@ -208,7 +208,7 @@ const seed = async () => {
           status: 'Processing CV Round',
           changedBy: candidate.user._id,
           changedAt: new Date(Date.now() - index * 86400000),
-          note: 'Application submitted',
+          note: 'Đã nộp đơn ứng tuyển',
         },
       ],
     });
@@ -218,7 +218,7 @@ const seed = async () => {
         status,
         changedBy: job.enterpriseId,
         changedAt: new Date(),
-        note: 'Reviewed by enterprise',
+        note: 'Doanh nghiệp đã xem xét hồ sơ',
       });
       await application.save();
     }
@@ -231,8 +231,8 @@ const seed = async () => {
     await Report.create({
       reporterId: jobSeekers[index].user._id,
       jobId: publishedJobs[(index + 1) % publishedJobs.length]._id,
-      title: `Report ${index + 1}`,
-      content: `This is a sample report ${index + 1} for moderation review.`,
+      title: `Báo cáo mẫu ${index + 1}`,
+      content: `Đây là báo cáo mẫu số ${index + 1} phục vụ việc kiểm duyệt nội dung.`,
       status: index % 2 === 0 ? 'pending' : 'reviewed',
     });
   }
@@ -242,8 +242,8 @@ const seed = async () => {
     oldData: enterprises[1].profile.toObject(),
     newData: {
       ...enterprises[1].profile.toObject(),
-      companyAddress: '88 Le Loi, Da Nang',
-      description: 'Expanded delivery center and enterprise hiring operations.',
+      companyAddress: '88 Lê Lợi, Đà Nẵng',
+      description: 'Mở rộng trung tâm vận hành và hoạt động tuyển dụng doanh nghiệp.',
     },
     status: 'pending',
   });
@@ -258,19 +258,19 @@ const seed = async () => {
     status: 'rejected',
     reviewedBy: admin._id,
     reviewedAt: new Date(),
-    note: 'Branding evidence was insufficient',
+    note: 'Tài liệu xác thực thương hiệu chưa đầy đủ',
   });
 
-  console.log('Seed completed successfully.');
+  console.log('Tạo dữ liệu mẫu thành công.');
   console.log('Admin: admin / Admin@123');
   console.log('Enterprise: enterprise1 / Enterprise@123');
-  console.log('Job seeker: jobseeker1 / Jobseeker@123');
+  console.log('Ứng viên: jobseeker1 / Jobseeker@123');
 
   await disconnectDatabase();
 };
 
 seed().catch(async (error) => {
-  console.error('Seed failed', error);
+  console.error('Tạo dữ liệu mẫu thất bại', error);
   await disconnectDatabase();
   process.exit(1);
 });

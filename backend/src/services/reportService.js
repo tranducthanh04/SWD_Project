@@ -7,12 +7,12 @@ const { logAction } = require('./auditLogService');
 const createReport = async (reporter, payload) => {
   const job = await Job.findById(payload.jobId);
   if (!job) {
-    throw new AppError('Job not found', 404);
+    throw new AppError('Không tìm thấy tin tuyển dụng', 404);
   }
 
   const existing = await Report.findOne({ reporterId: reporter._id, jobId: payload.jobId });
   if (existing) {
-    throw new AppError('You have already reported this job', 409);
+    throw new AppError('Bạn đã báo cáo tin tuyển dụng này trước đó', 409);
   }
 
   const report = await Report.create({
@@ -62,7 +62,7 @@ const listReports = async () => {
 const getReportById = async (reportId) => {
   const report = await Report.findById(reportId);
   if (!report) {
-    throw new AppError('Report not found', 404);
+    throw new AppError('Không tìm thấy báo cáo', 404);
   }
 
   const [reporter, job] = await Promise.all([

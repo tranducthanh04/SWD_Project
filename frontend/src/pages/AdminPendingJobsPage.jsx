@@ -17,7 +17,7 @@ function AdminPendingJobsPage() {
       setJobs(response.data);
       setError('');
     } catch (err) {
-      setError(getErrorMessage(err, 'Unable to load pending jobs'));
+      setError(getErrorMessage(err, 'Không thể tải danh sách tin chờ duyệt'));
     } finally {
       setLoading(false);
     }
@@ -28,17 +28,18 @@ function AdminPendingJobsPage() {
   }, []);
 
   const handleDecision = async (jobId, type) => {
-    const note = window.prompt(`Add a note for this ${type} decision:`, '') || '';
+    const note = window.prompt(`Nhập ghi chú cho quyết định ${type === 'approve' ? 'duyệt' : 'từ chối'}:`, '') || '';
     try {
       if (type === 'approve') {
         await adminApi.approveJob(jobId, note);
+        toast.success('Đã duyệt tin tuyển dụng');
       } else {
         await adminApi.rejectJob(jobId, note);
+        toast.success('Đã từ chối tin tuyển dụng');
       }
-      toast.success(`Job ${type}d`);
       loadJobs();
     } catch (err) {
-      toast.error(getErrorMessage(err, `Unable to ${type} job`));
+      toast.error(getErrorMessage(err, type === 'approve' ? 'Không thể duyệt tin tuyển dụng' : 'Không thể từ chối tin tuyển dụng'));
     }
   };
 
@@ -51,17 +52,17 @@ function AdminPendingJobsPage() {
         <div key={job._id} className="card-panel p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">{job.company?.companyName || 'Enterprise'}</div>
+              <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">{job.company?.companyName || 'Doanh nghiệp'}</div>
               <h2 className="mt-2 text-xl font-semibold text-slate-900">{job.title}</h2>
-              <div className="mt-2 text-sm text-slate-500">Deadline: {dateDisplay(job.applicationDeadline)}</div>
+              <div className="mt-2 text-sm text-slate-500">Hạn nộp hồ sơ: {dateDisplay(job.applicationDeadline)}</div>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <StatusBadge status={job.status} />
               <button className="btn-secondary" onClick={() => handleDecision(job._id, 'approve')}>
-                Approve
+                Duyệt
               </button>
               <button className="btn-primary" onClick={() => handleDecision(job._id, 'reject')}>
-                Reject
+                Từ chối
               </button>
             </div>
           </div>

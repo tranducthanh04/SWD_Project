@@ -52,7 +52,7 @@ function ProfilePage() {
           favouriteTags: (response.data.profile?.favouriteTags || []).join(', '),
         });
       } catch (err) {
-        setError(getErrorMessage(err, 'Unable to load profile'));
+        setError(getErrorMessage(err, 'Không thể tải hồ sơ'));
       } finally {
         setLoading(false);
       }
@@ -74,9 +74,9 @@ function ProfilePage() {
     try {
       const response = await profileApi.updateJobSeeker(formData);
       setProfileResponse(response.data);
-      toast.success(response.message || 'Profile updated successfully');
+      toast.success(response.message || 'Cập nhật hồ sơ thành công');
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to update profile'));
+      toast.error(getErrorMessage(err, 'Không thể cập nhật hồ sơ'));
     }
   };
 
@@ -86,31 +86,31 @@ function ProfilePage() {
   return (
     <div className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
       <div className="card-panel p-6">
-        <h1 className="text-2xl font-bold text-slate-950">My profile</h1>
+        <h1 className="text-2xl font-bold text-slate-950">Hồ sơ của tôi</h1>
         <div className="mt-4 space-y-3 text-sm text-slate-600">
-          <div>Name: {profileResponse?.user?.fullName}</div>
+          <div>Họ và tên: {profileResponse?.user?.fullName}</div>
           <div>Email: {profileResponse?.user?.email}</div>
-          <div>Status: {profileResponse?.profile?.profileCompleted ? 'Completed' : 'Incomplete'}</div>
-          <div>Skills: {(profileResponse?.profile?.skills || []).join(', ') || '-'}</div>
+          <div>Trạng thái hồ sơ: {profileResponse?.profile?.profileCompleted ? 'Đã hoàn thiện' : 'Chưa hoàn thiện'}</div>
+          <div>Kỹ năng: {(profileResponse?.profile?.skills || []).join(', ') || '-'}</div>
         </div>
       </div>
       <form className="card-panel grid gap-4 p-6 md:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
-        <FormInput label="Full name" error={errors.fullName?.message} {...register('fullName')} />
-        <FormInput label="Phone" error={errors.phone?.message} {...register('phone')} />
-        <FormInput label="Address" error={errors.address?.message} {...register('address')} />
-        <FormInput label="Date of birth" type="date" error={errors.dateOfBirth?.message} {...register('dateOfBirth')} />
-        <FormInput label="Experience years" type="number" error={errors.experienceYears?.message} {...register('experienceYears')} />
-        <FormInput label="Education" error={errors.education?.message} {...register('education')} />
+        <FormInput label="Họ và tên" error={errors.fullName?.message} {...register('fullName')} />
+        <FormInput label="Số điện thoại" error={errors.phone?.message} {...register('phone')} />
+        <FormInput label="Địa chỉ" error={errors.address?.message} {...register('address')} />
+        <FormInput label="Ngày sinh" type="date" error={errors.dateOfBirth?.message} {...register('dateOfBirth')} />
+        <FormInput label="Số năm kinh nghiệm" type="number" error={errors.experienceYears?.message} {...register('experienceYears')} />
+        <FormInput label="Học vấn" error={errors.education?.message} {...register('education')} />
         <div className="md:col-span-2">
-          <FormTextarea label="Professional summary" error={errors.summary?.message} {...register('summary')} />
+          <FormTextarea label="Tóm tắt chuyên môn" error={errors.summary?.message} {...register('summary')} />
         </div>
-        <FormInput label="Skills (comma separated)" error={errors.skills?.message} {...register('skills')} />
-        <FormInput label="Favourite tags (comma separated)" error={errors.favouriteTags?.message} {...register('favouriteTags')} />
-        <FileUploader label="Avatar" {...register('avatar')} />
+        <FormInput label="Kỹ năng (cách nhau bằng dấu phẩy)" error={errors.skills?.message} {...register('skills')} />
+        <FormInput label="Thẻ yêu thích (cách nhau bằng dấu phẩy)" error={errors.favouriteTags?.message} {...register('favouriteTags')} />
+        <FileUploader label="Ảnh đại diện" {...register('avatar')} />
         <FileUploader label="CV" {...register('cvFile')} />
         <div className="md:col-span-2">
           <button className="btn-primary w-full" disabled={isSubmitting} type="submit">
-            {isSubmitting ? 'Saving...' : 'Update profile'}
+            {isSubmitting ? 'Đang lưu...' : 'Cập nhật hồ sơ'}
           </button>
         </div>
       </form>
@@ -119,5 +119,3 @@ function ProfilePage() {
 }
 
 export default ProfilePage;
-
-

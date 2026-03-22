@@ -31,7 +31,7 @@ function AdminTagsPage() {
       setTags(response.data);
       setError('');
     } catch (err) {
-      setError(getErrorMessage(err, 'Unable to load tags'));
+      setError(getErrorMessage(err, 'Không thể tải danh sách thẻ'));
     } finally {
       setLoading(false);
     }
@@ -44,35 +44,35 @@ function AdminTagsPage() {
   const onSubmit = async (values) => {
     try {
       await tagsApi.create(values);
-      toast.success('Tag created');
+      toast.success('Đã tạo thẻ');
       reset();
       loadTags();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to create tag'));
+      toast.error(getErrorMessage(err, 'Không thể tạo thẻ'));
     }
   };
 
   const handleEdit = async (tag) => {
-    const name = window.prompt('Update tag name', tag.name);
+    const name = window.prompt('Cập nhật tên thẻ:', tag.name);
     if (!name) return;
-    const description = window.prompt('Update description', tag.description || '') || '';
+    const description = window.prompt('Cập nhật mô tả:', tag.description || '') || '';
     try {
       await tagsApi.update(tag._id, { name, description, isActive: tag.isActive });
-      toast.success('Tag updated');
+      toast.success('Đã cập nhật thẻ');
       loadTags();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to update tag'));
+      toast.error(getErrorMessage(err, 'Không thể cập nhật thẻ'));
     }
   };
 
   const handleDelete = async (tag) => {
-    if (!window.confirm(`Delete tag ${tag.name}?`)) return;
+    if (!window.confirm(`Bạn có chắc muốn xóa thẻ ${tag.name}?`)) return;
     try {
       await tagsApi.remove(tag._id);
-      toast.success('Tag deleted');
+      toast.success('Đã xóa thẻ');
       loadTags();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to delete tag'));
+      toast.error(getErrorMessage(err, 'Không thể xóa thẻ'));
     }
   };
 
@@ -82,28 +82,28 @@ function AdminTagsPage() {
   return (
     <div className="space-y-6">
       <form className="card-panel grid gap-4 p-6 md:grid-cols-[1fr_1fr_auto]" onSubmit={handleSubmit(onSubmit)}>
-        <FormInput label="Tag name" error={errors.name?.message} {...register('name')} />
-        <FormInput label="Description" error={errors.description?.message} {...register('description')} />
+        <FormInput label="Tên thẻ" error={errors.name?.message} {...register('name')} />
+        <FormInput label="Mô tả" error={errors.description?.message} {...register('description')} />
         <div className="self-end">
           <button className="btn-primary w-full" disabled={isSubmitting} type="submit">
-            {isSubmitting ? 'Saving...' : 'Add tag'}
+            {isSubmitting ? 'Đang lưu...' : 'Thêm thẻ'}
           </button>
         </div>
       </form>
       <DataTable
         columns={[
-          { header: 'Name', accessor: 'name' },
+          { header: 'Tên thẻ', accessor: 'name' },
           { header: 'Slug', accessor: 'slug' },
-          { header: 'Status', render: (row) => <StatusBadge status={row.isActive ? 'Active' : 'Inactive'} /> },
+          { header: 'Trạng thái', render: (row) => <StatusBadge status={row.isActive ? 'Active' : 'Inactive'} /> },
           {
-            header: 'Actions',
+            header: 'Thao tác',
             render: (row) => (
               <div className="flex gap-2">
                 <button className="btn-secondary" onClick={() => handleEdit(row)}>
-                  Edit
+                  Chỉnh sửa
                 </button>
                 <button className="btn-primary" onClick={() => handleDelete(row)}>
-                  Delete
+                  Xóa
                 </button>
               </div>
             ),

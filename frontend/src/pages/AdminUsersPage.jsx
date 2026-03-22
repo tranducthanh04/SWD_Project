@@ -6,7 +6,7 @@ import DataTable from '../components/shared/DataTable';
 import LoadingSkeleton from '../components/shared/LoadingSkeleton';
 import ErrorState from '../components/shared/ErrorState';
 import StatusBadge from '../components/shared/StatusBadge';
-import { getErrorMessage } from '../formatters';
+import { displayRole, getErrorMessage } from '../formatters';
 
 function AdminUsersPage() {
   const [users, setUsers] = useState([]);
@@ -19,7 +19,7 @@ function AdminUsersPage() {
       setUsers(response.data);
       setError('');
     } catch (err) {
-      setError(getErrorMessage(err, 'Unable to load users'));
+      setError(getErrorMessage(err, 'Không thể tải danh sách người dùng'));
     } finally {
       setLoading(false);
     }
@@ -35,7 +35,7 @@ function AdminUsersPage() {
       toast.success(successMessage);
       loadUsers();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Action failed'));
+      toast.error(getErrorMessage(err, 'Thao tác thất bại'));
     }
   };
 
@@ -45,26 +45,26 @@ function AdminUsersPage() {
   return (
     <DataTable
       columns={[
-        { header: 'User', render: (row) => <Link className="font-semibold text-brand-700" to={`/admin/users/${row._id}`}>{row.fullName}</Link> },
+        { header: 'Người dùng', render: (row) => <Link className="font-semibold text-brand-700" to={`/admin/users/${row._id}`}>{row.fullName}</Link> },
         { header: 'Email', accessor: 'email' },
-        { header: 'Role', accessor: 'role' },
-        { header: 'Verified', render: (row) => <StatusBadge status={row.isEmailVerified ? 'Verified' : 'Unverified'} /> },
-        { header: 'Status', render: (row) => <StatusBadge status={row.isBanned ? 'Banned' : row.isActive ? 'Active' : 'Inactive'} /> },
+        { header: 'Vai trò', render: (row) => displayRole(row.role) },
+        { header: 'Đã xác minh', render: (row) => <StatusBadge status={row.isEmailVerified ? 'Verified' : 'Unverified'} /> },
+        { header: 'Trạng thái', render: (row) => <StatusBadge status={row.isBanned ? 'Banned' : row.isActive ? 'Active' : 'Inactive'} /> },
         {
-          header: 'Actions',
+          header: 'Thao tác',
           render: (row) => (
             <div className="flex flex-wrap gap-2">
               {row.isBanned ? (
-                <button className="btn-secondary" onClick={() => handleAction(() => adminApi.unbanUser(row._id), 'User unbanned')}>
-                  Unban
+                <button className="btn-secondary" onClick={() => handleAction(() => adminApi.unbanUser(row._id), 'Đã mở khóa người dùng')}>
+                  Mở khóa
                 </button>
               ) : (
-                <button className="btn-secondary" onClick={() => handleAction(() => adminApi.banUser(row._id), 'User banned')}>
-                  Ban
+                <button className="btn-secondary" onClick={() => handleAction(() => adminApi.banUser(row._id), 'Đã khóa người dùng')}>
+                  Khóa
                 </button>
               )}
-              <button className="btn-primary" onClick={() => handleAction(() => adminApi.deleteUser(row._id), 'User deactivated')}>
-                Deactivate
+              <button className="btn-primary" onClick={() => handleAction(() => adminApi.deleteUser(row._id), 'Đã ngừng hoạt động người dùng')}>
+                Ngừng hoạt động
               </button>
             </div>
           ),

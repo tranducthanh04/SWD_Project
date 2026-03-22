@@ -13,8 +13,8 @@ const jobPayloadValidator = [
   body('experienceLevel').isIn(EXPERIENCE_LEVELS),
   body('jobType').isIn(JOB_TYPES),
   body('applicationDeadline').isISO8601(),
-  body('requirements').custom(arrayLike).withMessage('Requirements must be an array or comma-separated string'),
-  body('tags').custom(arrayLike).withMessage('Tags must be an array or comma-separated string'),
+  body('requirements').custom(arrayLike).withMessage('Yêu cầu phải là mảng hoặc chuỗi phân tách bằng dấu phẩy'),
+  body('tags').custom(arrayLike).withMessage('Thẻ phải là mảng hoặc chuỗi phân tách bằng dấu phẩy'),
 ];
 
 const adminReviewValidator = [body('note').optional().trim().isLength({ max: 500 })];

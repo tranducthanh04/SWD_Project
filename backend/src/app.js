@@ -28,7 +28,7 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.get('/api/health', (_req, res) => {
   successResponse(res, {
-    message: 'Online Job Searching System API is healthy',
+    message: 'API Hệ thống tìm kiếm việc làm trực tuyến đang hoạt động ổn định',
     data: {
       environment: env.nodeEnv,
       timestamp: new Date().toISOString(),

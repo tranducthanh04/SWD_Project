@@ -14,12 +14,12 @@ const listAllTags = catchAsync(async (_req, res) => {
 
 const createTag = catchAsync(async (req, res) => {
   const data = await tagService.createTag(req.body, req.user);
-  successResponse(res, { statusCode: 201, message: 'Tag created successfully', data });
+  successResponse(res, { statusCode: 201, message: 'Tạo thẻ thành công', data });
 });
 
 const updateTag = catchAsync(async (req, res) => {
   const data = await tagService.updateTag(req.params.id, req.body, req.user);
-  successResponse(res, { message: 'Tag updated successfully', data });
+  successResponse(res, { message: 'Cập nhật thẻ thành công', data });
 });
 
 const deleteTag = catchAsync(async (req, res) => {

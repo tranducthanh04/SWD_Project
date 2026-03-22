@@ -169,7 +169,7 @@ const getJobById = async (jobId, currentUser = null) => {
 
   const job = await Job.findById(jobId);
   if (!job) {
-    throw new AppError('Job not found', 404);
+    throw new AppError('Không tìm thấy tin tuyển dụng', 404);
   }
 
   const [enrichedJob] = await enrichJobs([job]);
@@ -178,7 +178,7 @@ const getJobById = async (jobId, currentUser = null) => {
     (currentUser.role === 'admin' || job.enterpriseId.toString() === currentUser._id.toString());
 
   if (!canViewPrivate && !isOpenPublicJob(job)) {
-    throw new AppError('This job is not publicly available', 404);
+    throw new AppError('Tin tuyển dụng này không hiển thị công khai', 404);
   }
 
   if (!canViewPrivate) {
@@ -194,11 +194,11 @@ const assertEnterpriseCanPost = async (enterpriseId) => {
   const profile = await EnterpriseProfile.findOne({ userId: enterpriseId });
 
   if (!profile) {
-    throw new AppError('Enterprise profile not found', 404);
+    throw new AppError('Không tìm thấy hồ sơ doanh nghiệp', 404);
   }
 
   if (profile.verificationStatus !== 'verified') {
-    throw new AppError('Only verified enterprises can post jobs', 403);
+    throw new AppError('Chỉ doanh nghiệp đã xác minh mới được đăng tin tuyển dụng', 403);
   }
 
   if (profile.accountPlan === 'free') {
@@ -209,7 +209,7 @@ const assertEnterpriseCanPost = async (enterpriseId) => {
     });
 
     if (activeJobCount >= 5) {
-      throw new AppError('Free enterprise accounts can only keep up to 5 active jobs', 400);
+      throw new AppError('Tài khoản doanh nghiệp miễn phí chỉ được duy trì tối đa 5 tin tuyển dụng đang hoạt động', 400);
     }
   }
 
@@ -275,11 +275,11 @@ const listEnterpriseJobs = async (enterpriseId) => {
 const updateJob = async (jobId, enterpriseUser, payload) => {
   const job = await Job.findById(jobId);
   if (!job) {
-    throw new AppError('Job not found', 404);
+    throw new AppError('Không tìm thấy tin tuyển dụng', 404);
   }
 
   if (job.enterpriseId.toString() !== enterpriseUser._id.toString()) {
-    throw new AppError('You can only update your own jobs', 403);
+    throw new AppError('Bạn chỉ có thể cập nhật tin tuyển dụng của chính mình', 403);
   }
 
   const data = await normalizeJobPayload(payload);
@@ -305,11 +305,11 @@ const updateJob = async (jobId, enterpriseUser, payload) => {
 const deleteJob = async (jobId, enterpriseUser) => {
   const job = await Job.findById(jobId);
   if (!job) {
-    throw new AppError('Job not found', 404);
+    throw new AppError('Không tìm thấy tin tuyển dụng', 404);
   }
 
   if (job.enterpriseId.toString() !== enterpriseUser._id.toString()) {
-    throw new AppError('You can only delete your own jobs', 403);
+    throw new AppError('Bạn chỉ có thể xóa tin tuyển dụng của chính mình', 403);
   }
 
   job.status = JOB_STATUSES.DELETED;
@@ -324,17 +324,17 @@ const deleteJob = async (jobId, enterpriseUser) => {
     targetId: job._id,
   });
 
-  return { message: 'Job deleted successfully' };
+  return { message: 'Xóa tin tuyển dụng thành công' };
 };
 
 const closeJob = async (jobId, enterpriseUser) => {
   const job = await Job.findById(jobId);
   if (!job) {
-    throw new AppError('Job not found', 404);
+    throw new AppError('Không tìm thấy tin tuyển dụng', 404);
   }
 
   if (job.enterpriseId.toString() !== enterpriseUser._id.toString()) {
-    throw new AppError('You can only close your own jobs', 403);
+    throw new AppError('Bạn chỉ có thể đóng tin tuyển dụng của chính mình', 403);
   }
 
   job.status = JOB_STATUSES.CLOSED;
@@ -360,7 +360,7 @@ const listPendingJobs = async () => {
 const approveJob = async (jobId, adminUser, note = '') => {
   const job = await Job.findById(jobId);
   if (!job) {
-    throw new AppError('Job not found', 404);
+    throw new AppError('Không tìm thấy tin tuyển dụng', 404);
   }
 
   job.status = JOB_STATUSES.PUBLISHED;
@@ -386,7 +386,7 @@ const approveJob = async (jobId, adminUser, note = '') => {
 const rejectJob = async (jobId, adminUser, note = '') => {
   const job = await Job.findById(jobId);
   if (!job) {
-    throw new AppError('Job not found', 404);
+    throw new AppError('Không tìm thấy tin tuyển dụng', 404);
   }
 
   job.status = JOB_STATUSES.REJECTED;

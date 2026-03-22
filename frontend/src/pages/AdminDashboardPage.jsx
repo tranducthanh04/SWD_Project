@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { adminApi } from '../api/adminApi';
-import { getErrorMessage } from '../formatters';
+import { displayStatKey, getErrorMessage } from '../formatters';
 import LoadingSkeleton from '../components/shared/LoadingSkeleton';
 import ErrorState from '../components/shared/ErrorState';
 
@@ -15,7 +15,7 @@ function AdminDashboardPage() {
         const response = await adminApi.dashboard();
         setStats(response.data);
       } catch (err) {
-        setError(getErrorMessage(err, 'Unable to load admin dashboard'));
+        setError(getErrorMessage(err, 'Không thể tải bảng điều khiển quản trị'));
       } finally {
         setLoading(false);
       }
@@ -31,7 +31,7 @@ function AdminDashboardPage() {
     <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
       {Object.entries(stats).map(([key, value]) => (
         <div key={key} className="card-panel p-6">
-          <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">{key.replace(/([A-Z])/g, ' $1')}</div>
+          <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">{displayStatKey(key)}</div>
           <div className="mt-3 text-3xl font-bold text-slate-950">{value}</div>
         </div>
       ))}

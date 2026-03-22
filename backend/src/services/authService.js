@@ -52,7 +52,7 @@ const register = async ({ username, email, fullName, password, gender, role }) =
   });
 
   if (existingUser) {
-    throw new AppError('Username or email is already in use', 409);
+    throw new AppError('Tên đăng nhập hoặc email đã được sử dụng', 409);
   }
 
   const passwordHash = await bcrypt.hash(password, 10);
@@ -93,7 +93,7 @@ const verifyEmail = async ({ email, code }) => {
   const user = await User.findOne({ email: email.toLowerCase() });
 
   if (!user) {
-    throw new AppError('User not found', 404);
+    throw new AppError('Không tìm thấy người dùng', 404);
   }
 
   const verificationCode = await VerificationCode.findOne({
@@ -105,7 +105,7 @@ const verifyEmail = async ({ email, code }) => {
   });
 
   if (!verificationCode) {
-    throw new AppError('Invalid or expired verification code', 400);
+    throw new AppError('Mã xác minh không hợp lệ hoặc đã hết hạn', 400);
   }
 
   verificationCode.used = true;
@@ -123,20 +123,20 @@ const login = async ({ identifier, password }) => {
   }).select('+passwordHash');
 
   if (!user) {
-    throw new AppError('Invalid credentials', 401);
+    throw new AppError('Thông tin đăng nhập không hợp lệ', 401);
   }
 
   const passwordMatches = await user.comparePassword(password);
   if (!passwordMatches) {
-    throw new AppError('Invalid credentials', 401);
+    throw new AppError('Thông tin đăng nhập không hợp lệ', 401);
   }
 
   if (!user.isEmailVerified) {
-    throw new AppError('Please verify your email before logging in', 403);
+    throw new AppError('Vui lòng xác minh email trước khi đăng nhập', 403);
   }
 
   if (!user.isActive || user.isBanned || user.deletedAt) {
-    throw new AppError('This account is not allowed to log in', 403);
+    throw new AppError('Tài khoản này không được phép đăng nhập', 403);
   }
 
   user.lastLoginAt = new Date();
@@ -168,7 +168,7 @@ const googleLogin = async ({ email, fullName, role = 'jobseeker', avatar = '' })
   }
 
   if (!user.isActive || user.isBanned) {
-    throw new AppError('This account is not allowed to log in', 403);
+    throw new AppError('Tài khoản này không được phép đăng nhập', 403);
   }
 
   return buildAuthPayload(user);
@@ -181,7 +181,7 @@ const forgotPassword = async ({ username, email }) => {
   });
 
   if (!user) {
-    throw new AppError('Username and email do not match', 404);
+    throw new AppError('Tên đăng nhập và email không khớp', 404);
   }
 
   const code = await createVerificationCode({
@@ -204,7 +204,7 @@ const resetPassword = async ({ username, email, code, newPassword }) => {
   }).select('+passwordHash');
 
   if (!user) {
-    throw new AppError('Username and email do not match', 404);
+    throw new AppError('Tên đăng nhập và email không khớp', 404);
   }
 
   const resetCode = await VerificationCode.findOne({
@@ -216,7 +216,7 @@ const resetPassword = async ({ username, email, code, newPassword }) => {
   });
 
   if (!resetCode) {
-    throw new AppError('Invalid or expired reset code', 400);
+    throw new AppError('Mã đặt lại không hợp lệ hoặc đã hết hạn', 400);
   }
 
   user.passwordHash = await bcrypt.hash(newPassword, 10);
@@ -227,26 +227,26 @@ const resetPassword = async ({ username, email, code, newPassword }) => {
 
   await RefreshToken.updateMany({ userId: user._id }, { isRevoked: true });
 
-  return { message: 'Password reset successfully' };
+  return { message: 'Đặt lại mật khẩu thành công' };
 };
 
 const changePassword = async ({ userId, currentPassword, newPassword }) => {
   const user = await User.findById(userId).select('+passwordHash');
 
   if (!user) {
-    throw new AppError('User not found', 404);
+    throw new AppError('Không tìm thấy người dùng', 404);
   }
 
   const matches = await user.comparePassword(currentPassword);
   if (!matches) {
-    throw new AppError('Current password is incorrect', 400);
+    throw new AppError('Mật khẩu hiện tại không chính xác', 400);
   }
 
   user.passwordHash = await bcrypt.hash(newPassword, 10);
   await user.save();
   await RefreshToken.updateMany({ userId: user._id }, { isRevoked: true });
 
-  return { message: 'Password changed successfully' };
+  return { message: 'Đổi mật khẩu thành công' };
 };
 
 const logout = async (refreshToken) => {
@@ -254,7 +254,7 @@ const logout = async (refreshToken) => {
     await RefreshToken.updateOne({ token: refreshToken }, { isRevoked: true });
   }
 
-  return { message: 'Logged out successfully' };
+  return { message: 'Đăng xuất thành công' };
 };
 
 const refreshToken = async (token) => {
@@ -265,14 +265,14 @@ const refreshToken = async (token) => {
   });
 
   if (!stored) {
-    throw new AppError('Refresh token is invalid or expired', 401);
+    throw new AppError('Refresh token không hợp lệ hoặc đã hết hạn', 401);
   }
 
   const payload = verifyRefreshToken(token);
   const user = await User.findById(payload.sub);
 
   if (!user || !user.isActive || user.isBanned) {
-    throw new AppError('User is not allowed to refresh session', 401);
+    throw new AppError('Người dùng không được phép làm mới phiên đăng nhập', 401);
   }
 
   stored.isRevoked = true;
@@ -284,7 +284,7 @@ const refreshToken = async (token) => {
 const getMe = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw new AppError('User not found', 404);
+    throw new AppError('Không tìm thấy người dùng', 404);
   }
 
   return sanitizeUser(user);

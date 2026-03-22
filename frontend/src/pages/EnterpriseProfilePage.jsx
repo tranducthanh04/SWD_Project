@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { profileApi } from '../api/profileApi';
-import { getErrorMessage } from '../formatters';
+import { displayAccountPlan, getErrorMessage } from '../formatters';
 import { enterpriseProfileSchema } from '../schemas';
 import FormInput from '../components/forms/FormInput';
 import FormTextarea from '../components/forms/FormTextarea';
@@ -49,7 +49,7 @@ function EnterpriseProfilePage({ mode = 'profile' }) {
           description: response.data.profile?.description || '',
         });
       } catch (err) {
-        setError(getErrorMessage(err, 'Unable to load enterprise profile'));
+        setError(getErrorMessage(err, 'Không thể tải hồ sơ doanh nghiệp'));
       } finally {
         setLoading(false);
       }
@@ -69,9 +69,9 @@ function EnterpriseProfilePage({ mode = 'profile' }) {
 
     try {
       const response = await profileApi.requestEnterpriseUpdate(formData);
-      toast.success(response.message || 'Update request submitted');
+      toast.success(response.message || 'Đã gửi yêu cầu cập nhật');
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to submit update request'));
+      toast.error(getErrorMessage(err, 'Không thể gửi yêu cầu cập nhật'));
     }
   };
 
@@ -81,37 +81,39 @@ function EnterpriseProfilePage({ mode = 'profile' }) {
   return (
     <div className="grid gap-6 xl:grid-cols-[0.8fr_1.2fr]">
       <div className="card-panel p-6">
-        <h1 className="text-2xl font-bold text-slate-950">Company profile</h1>
+        <h1 className="text-2xl font-bold text-slate-950">Hồ sơ doanh nghiệp</h1>
         <div className="mt-4 space-y-3 text-sm text-slate-600">
-          <div>Company: {payload.profile?.companyName || '-'}</div>
-          <div>Verification: <StatusBadge status={payload.profile?.verificationStatus || 'pending'} /></div>
-          <div>Plan: {payload.profile?.accountPlan || 'free'}</div>
+          <div>Doanh nghiệp: {payload.profile?.companyName || '-'}</div>
+          <div>
+            Xác minh: <StatusBadge status={payload.profile?.verificationStatus || 'pending'} />
+          </div>
+          <div>Gói tài khoản: {displayAccountPlan(payload.profile?.accountPlan || 'free')}</div>
           {payload.latestRequest ? (
             <div>
-              Latest request: <StatusBadge status={payload.latestRequest.status} />
+              Yêu cầu gần nhất: <StatusBadge status={payload.latestRequest.status} />
             </div>
           ) : null}
         </div>
       </div>
       <form className="card-panel grid gap-4 p-6 md:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
         <div className="md:col-span-2 text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">
-          {mode === 'request' ? 'Submit update request' : 'Request a profile update'}
+          {mode === 'request' ? 'Gửi yêu cầu cập nhật' : 'Gửi yêu cầu cập nhật hồ sơ'}
         </div>
-        <FormInput label="Company name" error={errors.companyName?.message} {...register('companyName')} />
-        <FormInput label="Company email" error={errors.companyEmail?.message} {...register('companyEmail')} />
-        <FormInput label="Company phone" error={errors.companyPhone?.message} {...register('companyPhone')} />
-        <FormInput label="Company address" error={errors.companyAddress?.message} {...register('companyAddress')} />
-        <FormInput label="Tax code" error={errors.taxCode?.message} {...register('taxCode')} />
+        <FormInput label="Tên doanh nghiệp" error={errors.companyName?.message} {...register('companyName')} />
+        <FormInput label="Email doanh nghiệp" error={errors.companyEmail?.message} {...register('companyEmail')} />
+        <FormInput label="Số điện thoại doanh nghiệp" error={errors.companyPhone?.message} {...register('companyPhone')} />
+        <FormInput label="Địa chỉ doanh nghiệp" error={errors.companyAddress?.message} {...register('companyAddress')} />
+        <FormInput label="Mã số thuế" error={errors.taxCode?.message} {...register('taxCode')} />
         <FormInput label="Website" error={errors.website?.message} {...register('website')} />
         <div className="md:col-span-2">
-          <FormTextarea label="Description" error={errors.description?.message} {...register('description')} />
+          <FormTextarea label="Mô tả" error={errors.description?.message} {...register('description')} />
         </div>
         <div className="md:col-span-2">
-          <FileUploader label="Company logo" {...register('logo')} />
+          <FileUploader label="Logo doanh nghiệp" {...register('logo')} />
         </div>
         <div className="md:col-span-2">
           <button className="btn-primary w-full" disabled={isSubmitting} type="submit">
-            {isSubmitting ? 'Submitting...' : 'Submit request'}
+            {isSubmitting ? 'Đang gửi...' : 'Gửi yêu cầu'}
           </button>
         </div>
       </form>
@@ -120,5 +122,3 @@ function EnterpriseProfilePage({ mode = 'profile' }) {
 }
 
 export default EnterpriseProfilePage;
-
-

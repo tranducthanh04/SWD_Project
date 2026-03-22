@@ -18,7 +18,7 @@ function AdminReportDetailPage() {
         const response = await adminApi.reportDetail(id);
         setReport(response.data);
       } catch (err) {
-        setError(getErrorMessage(err, 'Unable to load report detail'));
+        setError(getErrorMessage(err, 'Không thể tải chi tiết báo cáo'));
       } finally {
         setLoading(false);
       }
@@ -28,26 +28,26 @@ function AdminReportDetailPage() {
   }, [id]);
 
   if (loading) return <LoadingSkeleton rows={7} />;
-  if (error || !report) return <ErrorState description={error || 'Report not found'} />;
+  if (error || !report) return <ErrorState description={error || 'Không tìm thấy báo cáo'} />;
 
   return (
     <div className="grid gap-6 xl:grid-cols-[0.9fr_1.1fr]">
       <div className="card-panel p-6">
         <h1 className="text-2xl font-bold text-slate-950">{report.title}</h1>
         <div className="mt-4 space-y-3 text-sm text-slate-600">
-          <div>Reporter: {report.reporter?.fullName}</div>
+          <div>Người báo cáo: {report.reporter?.fullName}</div>
           <div>Email: {report.reporter?.email}</div>
-          <div>Created: {dateDisplay(report.createdAt)}</div>
+          <div>Ngày tạo: {dateDisplay(report.createdAt)}</div>
         </div>
         <div className="mt-4">
           <StatusBadge status={report.status} />
         </div>
       </div>
       <div className="card-panel p-6">
-        <h2 className="text-xl font-semibold text-slate-900">Content</h2>
+        <h2 className="text-xl font-semibold text-slate-900">Nội dung</h2>
         <p className="mt-4 whitespace-pre-wrap text-sm leading-7 text-slate-600">{report.content}</p>
         <div className="mt-6 rounded-2xl border border-slate-200 p-4 text-sm text-slate-600">
-          <div className="font-semibold text-slate-900">Reported job</div>
+          <div className="font-semibold text-slate-900">Tin tuyển dụng bị báo cáo</div>
           <div className="mt-2">{report.job?.title}</div>
         </div>
       </div>

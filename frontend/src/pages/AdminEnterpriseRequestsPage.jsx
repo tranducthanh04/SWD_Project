@@ -17,7 +17,7 @@ function AdminEnterpriseRequestsPage() {
       setRequests(response.data);
       setError('');
     } catch (err) {
-      setError(getErrorMessage(err, 'Unable to load enterprise requests'));
+      setError(getErrorMessage(err, 'Không thể tải yêu cầu doanh nghiệp'));
     } finally {
       setLoading(false);
     }
@@ -28,17 +28,18 @@ function AdminEnterpriseRequestsPage() {
   }, []);
 
   const handleDecision = async (id, type) => {
-    const note = window.prompt(`Add a note for this ${type} decision:`, '') || '';
+    const note = window.prompt(`Nhập ghi chú cho quyết định ${type === 'approve' ? 'duyệt' : 'từ chối'}:`, '') || '';
     try {
       if (type === 'approve') {
         await adminApi.approveEnterpriseRequest(id, note);
+        toast.success('Đã duyệt yêu cầu cập nhật doanh nghiệp');
       } else {
         await adminApi.rejectEnterpriseRequest(id, note);
+        toast.success('Đã từ chối yêu cầu cập nhật doanh nghiệp');
       }
-      toast.success(`Request ${type}d`);
       loadRequests();
     } catch (err) {
-      toast.error(getErrorMessage(err, `Unable to ${type} request`));
+      toast.error(getErrorMessage(err, type === 'approve' ? 'Không thể duyệt yêu cầu' : 'Không thể từ chối yêu cầu'));
     }
   };
 
@@ -53,17 +54,17 @@ function AdminEnterpriseRequestsPage() {
             <div>
               <div className="text-lg font-semibold text-slate-900">{request.enterpriseId?.fullName}</div>
               <div className="text-sm text-slate-500">{request.enterpriseId?.email}</div>
-              <div className="mt-2 text-sm text-slate-500">Requested company name: {request.newData?.companyName || '-'}</div>
+              <div className="mt-2 text-sm text-slate-500">Tên doanh nghiệp đề xuất: {request.newData?.companyName || '-'}</div>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <StatusBadge status={request.status} />
               {request.status === 'pending' ? (
                 <>
                   <button className="btn-secondary" onClick={() => handleDecision(request._id, 'approve')}>
-                    Approve
+                    Duyệt
                   </button>
                   <button className="btn-primary" onClick={() => handleDecision(request._id, 'reject')}>
-                    Reject
+                    Từ chối
                   </button>
                 </>
               ) : null}

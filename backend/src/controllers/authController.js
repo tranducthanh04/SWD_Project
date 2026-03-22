@@ -4,27 +4,27 @@ const authService = require('../services/authService');
 
 const register = catchAsync(async (req, res) => {
   const data = await authService.register(req.body);
-  successResponse(res, { statusCode: 201, message: 'Registration successful. Please verify your email.', data });
+  successResponse(res, { statusCode: 201, message: 'Đăng ký thành công. Vui lòng xác minh email.', data });
 });
 
 const verifyEmail = catchAsync(async (req, res) => {
   const data = await authService.verifyEmail(req.body);
-  successResponse(res, { message: 'Email verified successfully', data });
+  successResponse(res, { message: 'Xác minh email thành công', data });
 });
 
 const login = catchAsync(async (req, res) => {
   const data = await authService.login(req.body);
-  successResponse(res, { message: 'Login successful', data });
+  successResponse(res, { message: 'Đăng nhập thành công', data });
 });
 
 const googleLogin = catchAsync(async (req, res) => {
   const data = await authService.googleLogin(req.body);
-  successResponse(res, { message: 'Google login successful', data });
+  successResponse(res, { message: 'Đăng nhập Google thành công', data });
 });
 
 const forgotPassword = catchAsync(async (req, res) => {
   const data = await authService.forgotPassword(req.body);
-  successResponse(res, { message: 'Password reset code sent successfully', data });
+  successResponse(res, { message: 'Đã gửi mã đặt lại mật khẩu thành công', data });
 });
 
 const resetPassword = catchAsync(async (req, res) => {
@@ -44,7 +44,7 @@ const logout = catchAsync(async (req, res) => {
 
 const refreshToken = catchAsync(async (req, res) => {
   const data = await authService.refreshToken(req.body.refreshToken);
-  successResponse(res, { message: 'Token refreshed successfully', data });
+  successResponse(res, { message: 'Làm mới token thành công', data });
 });
 
 const me = catchAsync(async (req, res) => {

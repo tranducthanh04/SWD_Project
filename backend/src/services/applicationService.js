@@ -43,24 +43,24 @@ const applyForJob = async (jobSeekerUser, jobId, payload, file) => {
   ]);
 
   if (!job) {
-    throw new AppError('Job not found', 404);
+    throw new AppError('Không tìm thấy tin tuyển dụng', 404);
   }
 
   if (job.status !== 'Published' || job.isExpired || new Date(job.applicationDeadline) < new Date()) {
-    throw new AppError('This job is closed or expired', 400);
+    throw new AppError('Tin tuyển dụng này đã đóng hoặc đã hết hạn', 400);
   }
 
   if (!profile || !profile.profileCompleted) {
-    throw new AppError('Please complete your profile before applying', 400);
+    throw new AppError('Vui lòng hoàn thiện hồ sơ trước khi ứng tuyển', 400);
   }
 
   if (existingApplication) {
-    throw new AppError('You cannot reapply to a job once you have already applied or withdrawn', 409);
+    throw new AppError('Bạn không thể ứng tuyển lại công việc này sau khi đã ứng tuyển hoặc rút đơn', 409);
   }
 
   const cvFileUrl = file ? buildFileUrl('cvs', file.filename) : profile.cvFileUrl;
   if (!cvFileUrl) {
-    throw new AppError('CV is required to apply', 400);
+    throw new AppError('Ứng tuyển bắt buộc phải có CV', 400);
   }
 
   const application = await Application.create({
@@ -75,7 +75,7 @@ const applyForJob = async (jobSeekerUser, jobId, payload, file) => {
         status: 'Processing CV Round',
         changedBy: jobSeekerUser._id,
         changedAt: new Date(),
-        note: 'Application submitted',
+        note: 'Đã nộp đơn ứng tuyển',
       },
     ],
   });
@@ -104,7 +104,7 @@ const getMyApplications = async (jobSeekerId) => {
 const getMyApplicationDetail = async (jobSeekerId, applicationId) => {
   const application = await Application.findOne({ _id: applicationId, jobSeekerId });
   if (!application) {
-    throw new AppError('Application not found', 404);
+    throw new AppError('Không tìm thấy đơn ứng tuyển', 404);
   }
 
   const [result] = await enrichApplications([application]);
@@ -114,11 +114,11 @@ const getMyApplicationDetail = async (jobSeekerId, applicationId) => {
 const withdrawApplication = async (jobSeekerId, applicationId) => {
   const application = await Application.findOne({ _id: applicationId, jobSeekerId });
   if (!application) {
-    throw new AppError('Application not found', 404);
+    throw new AppError('Không tìm thấy đơn ứng tuyển', 404);
   }
 
   if (application.isWithdrawn) {
-    throw new AppError('Application already withdrawn', 400);
+    throw new AppError('Đơn ứng tuyển đã được rút trước đó', 400);
   }
 
   application.status = 'Withdrawn';
@@ -128,7 +128,7 @@ const withdrawApplication = async (jobSeekerId, applicationId) => {
     status: 'Withdrawn',
     changedBy: jobSeekerId,
     changedAt: new Date(),
-    note: 'Withdrawn by candidate',
+    note: 'Ứng viên đã rút đơn',
   });
   await application.save();
 
@@ -156,7 +156,7 @@ const getEnterpriseApplications = async (enterpriseId, filters = {}) => {
 const getApplicantsByJob = async (enterpriseId, jobId) => {
   const job = await Job.findOne({ _id: jobId, enterpriseId });
   if (!job) {
-    throw new AppError('Job not found', 404);
+    throw new AppError('Không tìm thấy tin tuyển dụng', 404);
   }
 
   const applications = await Application.find({ jobId }).sort({ createdAt: -1 });
@@ -167,15 +167,15 @@ const updateApplicationStatus = async (enterpriseId, applicationId, payload) => 
   const application = await Application.findById(applicationId);
 
   if (!application) {
-    throw new AppError('Application not found', 404);
+    throw new AppError('Không tìm thấy đơn ứng tuyển', 404);
   }
 
   if (application.enterpriseId.toString() !== enterpriseId.toString()) {
-    throw new AppError('You can only manage applications for your own jobs', 403);
+    throw new AppError('Bạn chỉ có thể quản lý đơn ứng tuyển của tin tuyển dụng thuộc doanh nghiệp mình', 403);
   }
 
   if (payload.status === 'Withdrawn') {
-    throw new AppError('Only job seekers can withdraw applications', 400);
+    throw new AppError('Chỉ ứng viên mới được phép rút đơn ứng tuyển', 400);
   }
 
   application.status = payload.status;

@@ -32,9 +32,9 @@ function RegisterPage() {
     try {
       const response = await authApi.register(values);
       setPendingEmail(values.email);
-      toast.success(response.message || 'Registration submitted. Check your email for the OTP.');
+      toast.success(response.message || 'Đăng ký thành công. Vui lòng kiểm tra email để lấy mã OTP.');
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Registration failed'));
+      toast.error(getErrorMessage(err, 'Đăng ký thất bại'));
     }
   };
 
@@ -42,10 +42,10 @@ function RegisterPage() {
     event.preventDefault();
     try {
       const response = await authApi.verifyEmail({ email: pendingEmail, code: verificationCode });
-      toast.success(response.message || 'Email verified successfully');
+      toast.success(response.message || 'Xác minh email thành công');
       setVerificationCode('');
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Verification failed'));
+      toast.error(getErrorMessage(err, 'Xác minh thất bại'));
     }
   };
 
@@ -53,50 +53,50 @@ function RegisterPage() {
     <div className="container-shell py-16">
       <div className="grid gap-8 lg:grid-cols-[1fr_0.85fr]">
         <div className="card-panel p-8">
-          <h1 className="text-3xl font-bold text-slate-950">Create your account</h1>
-          <p className="mt-2 text-sm text-slate-500">Choose a role, set a strong password, and verify your email before logging in.</p>
+          <h1 className="text-3xl font-bold text-slate-950">Tạo tài khoản của bạn</h1>
+          <p className="mt-2 text-sm text-slate-500">Chọn vai trò, thiết lập mật khẩu mạnh và xác minh email trước khi đăng nhập.</p>
           <form className="mt-8 grid gap-4 md:grid-cols-2" onSubmit={handleSubmit(onSubmit)}>
-            <FormInput label="Username" error={errors.username?.message} {...register('username')} />
-            <FormInput label="Full name" error={errors.fullName?.message} {...register('fullName')} />
+            <FormInput label="Tên đăng nhập" error={errors.username?.message} {...register('username')} />
+            <FormInput label="Họ và tên" error={errors.fullName?.message} {...register('fullName')} />
             <FormInput label="Email" error={errors.email?.message} {...register('email')} />
             <FormSelect
-              label="Role"
+              label="Vai trò"
               error={errors.role?.message}
               options={[
-                { value: 'jobseeker', label: 'Job Seeker' },
-                { value: 'enterprise', label: 'Enterprise' },
+                { value: 'jobseeker', label: 'Ứng viên' },
+                { value: 'enterprise', label: 'Doanh nghiệp' },
               ]}
               {...register('role')}
             />
             <FormSelect
-              label="Gender"
+              label="Giới tính"
               error={errors.gender?.message}
               options={[
-                { value: 'male', label: 'Male' },
-                { value: 'female', label: 'Female' },
-                { value: 'other', label: 'Other' },
+                { value: 'male', label: 'Nam' },
+                { value: 'female', label: 'Nữ' },
+                { value: 'other', label: 'Khác' },
               ]}
               {...register('gender')}
             />
             <div className="hidden md:block" />
-            <FormInput label="Password" type="password" error={errors.password?.message} {...register('password')} />
-            <FormInput label="Confirm password" type="password" error={errors.confirmPassword?.message} {...register('confirmPassword')} />
+            <FormInput label="Mật khẩu" type="password" error={errors.password?.message} {...register('password')} />
+            <FormInput label="Xác nhận mật khẩu" type="password" error={errors.confirmPassword?.message} {...register('confirmPassword')} />
             <div className="md:col-span-2">
               <button className="btn-primary w-full" disabled={isSubmitting} type="submit">
-                {isSubmitting ? 'Creating account...' : 'Register'}
+                {isSubmitting ? 'Đang tạo tài khoản...' : 'Đăng ký'}
               </button>
             </div>
           </form>
         </div>
 
         <div className="card-panel p-8">
-          <h2 className="text-2xl font-semibold text-slate-900">Verify your email</h2>
-          <p className="mt-2 text-sm text-slate-500">After registration, paste the OTP from your email here to activate the account.</p>
+          <h2 className="text-2xl font-semibold text-slate-900">Xác minh email</h2>
+          <p className="mt-2 text-sm text-slate-500">Sau khi đăng ký, hãy nhập mã OTP được gửi đến email để kích hoạt tài khoản.</p>
           <form className="mt-8 space-y-4" onSubmit={handleVerify}>
-            <FormInput label="Registered email" value={pendingEmail} onChange={(event) => setPendingEmail(event.target.value)} />
-            <FormInput label="Verification code" value={verificationCode} onChange={(event) => setVerificationCode(event.target.value)} />
+            <FormInput label="Email đã đăng ký" value={pendingEmail} onChange={(event) => setPendingEmail(event.target.value)} />
+            <FormInput label="Mã xác minh" value={verificationCode} onChange={(event) => setVerificationCode(event.target.value)} />
             <button className="btn-secondary w-full" type="submit">
-              Verify email
+              Xác minh email
             </button>
           </form>
         </div>

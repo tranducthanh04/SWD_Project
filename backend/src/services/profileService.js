@@ -40,7 +40,7 @@ const updateJobSeekerProfile = async (userId, payload, files = {}) => {
   const profile = await JobSeekerProfile.findOne({ userId });
 
   if (!user || !profile) {
-    throw new AppError('Job seeker profile not found', 404);
+    throw new AppError('Không tìm thấy hồ sơ ứng viên', 404);
   }
 
   const avatarFile = files.avatar?.[0];
@@ -70,7 +70,7 @@ const requestEnterpriseProfileUpdate = async (enterpriseId, payload, files = {})
   const profile = await EnterpriseProfile.findOne({ userId: enterpriseId });
 
   if (!user || !profile) {
-    throw new AppError('Enterprise profile not found', 404);
+    throw new AppError('Không tìm thấy hồ sơ doanh nghiệp', 404);
   }
 
   const existingPending = await EnterpriseProfileUpdateRequest.findOne({
@@ -79,7 +79,7 @@ const requestEnterpriseProfileUpdate = async (enterpriseId, payload, files = {})
   });
 
   if (existingPending) {
-    throw new AppError('A profile update request is already pending review', 409);
+    throw new AppError('Đã có yêu cầu cập nhật hồ sơ đang chờ duyệt', 409);
   }
 
   const logoFile = files.logo?.[0];
@@ -122,16 +122,16 @@ const approveEnterpriseProfileUpdateRequest = async (requestId, adminId, note = 
   const request = await EnterpriseProfileUpdateRequest.findById(requestId);
 
   if (!request) {
-    throw new AppError('Enterprise update request not found', 404);
+    throw new AppError('Không tìm thấy yêu cầu cập nhật doanh nghiệp', 404);
   }
 
   if (request.status !== 'pending') {
-    throw new AppError('This request has already been reviewed', 409);
+    throw new AppError('Yêu cầu này đã được xem xét trước đó', 409);
   }
 
   const profile = await EnterpriseProfile.findOne({ userId: request.enterpriseId });
   if (!profile) {
-    throw new AppError('Enterprise profile not found', 404);
+    throw new AppError('Không tìm thấy hồ sơ doanh nghiệp', 404);
   }
 
   Object.assign(profile, request.newData, { verificationStatus: 'verified' });
@@ -159,11 +159,11 @@ const rejectEnterpriseProfileUpdateRequest = async (requestId, adminId, note = '
   const request = await EnterpriseProfileUpdateRequest.findById(requestId);
 
   if (!request) {
-    throw new AppError('Enterprise update request not found', 404);
+    throw new AppError('Không tìm thấy yêu cầu cập nhật doanh nghiệp', 404);
   }
 
   if (request.status !== 'pending') {
-    throw new AppError('This request has already been reviewed', 409);
+    throw new AppError('Yêu cầu này đã được xem xét trước đó', 409);
   }
 
   request.status = 'rejected';

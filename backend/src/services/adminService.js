@@ -52,7 +52,7 @@ const listUsers = async () => {
 const getUserById = async (userId) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw new AppError('User not found', 404);
+    throw new AppError('Không tìm thấy người dùng', 404);
   }
   return sanitizeUser(user);
 };
@@ -60,7 +60,7 @@ const getUserById = async (userId) => {
 const banUser = async (userId, admin) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw new AppError('User not found', 404);
+    throw new AppError('Không tìm thấy người dùng', 404);
   }
 
   user.isBanned = true;
@@ -80,7 +80,7 @@ const banUser = async (userId, admin) => {
 const unbanUser = async (userId, admin) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw new AppError('User not found', 404);
+    throw new AppError('Không tìm thấy người dùng', 404);
   }
 
   user.isBanned = false;
@@ -100,7 +100,7 @@ const unbanUser = async (userId, admin) => {
 const deleteUser = async (userId, admin) => {
   const user = await User.findById(userId);
   if (!user) {
-    throw new AppError('User not found', 404);
+    throw new AppError('Không tìm thấy người dùng', 404);
   }
 
   user.isActive = false;
@@ -115,7 +115,7 @@ const deleteUser = async (userId, admin) => {
     targetId: user._id,
   });
 
-  return { message: 'User deactivated successfully' };
+  return { message: 'Ngừng hoạt động người dùng thành công' };
 };
 
 const listEnterpriseUpdateRequests = async () =>

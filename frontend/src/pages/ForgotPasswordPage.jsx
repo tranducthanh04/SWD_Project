@@ -19,22 +19,22 @@ function ForgotPasswordPage() {
   const onSubmit = async (values) => {
     try {
       const response = await authApi.forgotPassword(values);
-      toast.success(response.message || 'Reset code sent to your email');
+      toast.success(response.message || 'Đã gửi mã đặt lại mật khẩu vào email của bạn');
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to send reset code'));
+      toast.error(getErrorMessage(err, 'Không thể gửi mã đặt lại'));
     }
   };
 
   return (
     <div className="container-shell py-16">
       <div className="mx-auto max-w-lg card-panel p-8">
-        <h1 className="text-3xl font-bold text-slate-950">Forgot password</h1>
-        <p className="mt-2 text-sm text-slate-500">Provide the exact username and email tied to the account.</p>
+        <h1 className="text-3xl font-bold text-slate-950">Quên mật khẩu</h1>
+        <p className="mt-2 text-sm text-slate-500">Vui lòng nhập đúng tên đăng nhập và email đã gắn với tài khoản.</p>
         <form className="mt-8 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <FormInput label="Username" error={errors.username?.message} {...register('username')} />
+          <FormInput label="Tên đăng nhập" error={errors.username?.message} {...register('username')} />
           <FormInput label="Email" error={errors.email?.message} {...register('email')} />
           <button className="btn-primary w-full" disabled={isSubmitting} type="submit">
-            {isSubmitting ? 'Sending...' : 'Send reset code'}
+            {isSubmitting ? 'Đang gửi...' : 'Gửi mã đặt lại'}
           </button>
         </form>
       </div>

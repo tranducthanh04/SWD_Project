@@ -40,12 +40,12 @@ const hydrateSavedJobs = async (records) => {
 const saveJob = async (jobSeekerId, jobId) => {
   const job = await Job.findById(jobId);
   if (!job || job.status !== 'Published' || job.isExpired || new Date(job.applicationDeadline) < new Date()) {
-    throw new AppError('Only open published jobs can be saved', 400);
+    throw new AppError('Chỉ có thể lưu các tin tuyển dụng đang mở và đã được duyệt', 400);
   }
 
   const existing = await SavedJob.findOne({ jobSeekerId, jobId });
   if (existing) {
-    throw new AppError('This job is already saved', 409);
+    throw new AppError('Tin tuyển dụng này đã được lưu trước đó', 409);
   }
 
   return SavedJob.create({ jobSeekerId, jobId });
@@ -76,10 +76,10 @@ const listSavedJobs = async (jobSeekerId) => {
 const removeSavedJob = async (jobSeekerId, jobId) => {
   const deleted = await SavedJob.findOneAndDelete({ jobSeekerId, jobId });
   if (!deleted) {
-    throw new AppError('Saved job not found', 404);
+    throw new AppError('Không tìm thấy việc làm đã lưu', 404);
   }
 
-  return { message: 'Saved job removed successfully' };
+  return { message: 'Xóa việc làm đã lưu thành công' };
 };
 
 module.exports = {

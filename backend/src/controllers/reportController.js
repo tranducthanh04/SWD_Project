@@ -4,7 +4,7 @@ const reportService = require('../services/reportService');
 
 const createReport = catchAsync(async (req, res) => {
   const data = await reportService.createReport(req.user, req.body);
-  successResponse(res, { statusCode: 201, message: 'Report submitted successfully', data });
+  successResponse(res, { statusCode: 201, message: 'Gửi báo cáo thành công', data });
 });
 
 const listReports = catchAsync(async (_req, res) => {

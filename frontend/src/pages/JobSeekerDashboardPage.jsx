@@ -31,7 +31,7 @@ function JobSeekerDashboardPage() {
           recommendedJobs: recommendedJobs.data,
         });
       } catch (err) {
-        setError(getErrorMessage(err, 'Unable to load dashboard'));
+        setError(getErrorMessage(err, 'Không thể tải bảng điều khiển'));
       } finally {
         setLoading(false);
       }
@@ -47,25 +47,25 @@ function JobSeekerDashboardPage() {
     <div className="space-y-6">
       <div className="grid gap-4 md:grid-cols-3">
         <div className="card-panel p-6">
-          <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">Saved jobs</div>
+          <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">Việc làm đã lưu</div>
           <div className="mt-3 text-3xl font-bold text-slate-950">{summary.savedJobs.length}</div>
         </div>
         <div className="card-panel p-6">
-          <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">Applications</div>
+          <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">Đơn ứng tuyển</div>
           <div className="mt-3 text-3xl font-bold text-slate-950">{summary.applications.length}</div>
         </div>
         <div className="card-panel p-6">
-          <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">Profile</div>
-          <div className="mt-3 text-xl font-bold text-slate-950">{summary.profile.profile?.profileCompleted ? 'Completed' : 'Incomplete'}</div>
+          <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">Hồ sơ</div>
+          <div className="mt-3 text-xl font-bold text-slate-950">{summary.profile.profile?.profileCompleted ? 'Đã hoàn thiện' : 'Chưa hoàn thiện'}</div>
         </div>
       </div>
 
       <div className="grid gap-6 xl:grid-cols-2">
         <div className="card-panel p-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-slate-900">Recent applications</h2>
+            <h2 className="text-xl font-semibold text-slate-900">Đơn ứng tuyển gần đây</h2>
             <Link to="/applications" className="text-sm font-semibold text-brand-700">
-              View all
+              Xem tất cả
             </Link>
           </div>
           <div className="mt-4 space-y-3">
@@ -85,16 +85,16 @@ function JobSeekerDashboardPage() {
 
         <div className="card-panel p-6">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold text-slate-900">Recommended jobs</h2>
+            <h2 className="text-xl font-semibold text-slate-900">Việc làm gợi ý</h2>
             <Link to="/jobs" className="text-sm font-semibold text-brand-700">
-              Explore
+              Khám phá
             </Link>
           </div>
           <div className="mt-4 space-y-3">
             {summary.recommendedJobs.slice(0, 4).map((job) => (
               <Link key={job._id} to={`/jobs/${job._id}`} className="block rounded-2xl border border-slate-200 p-4 hover:border-brand-300">
                 <div className="font-semibold text-slate-900">{job.title}</div>
-                <div className="mt-1 text-sm text-slate-500">{job.company?.companyName || 'Enterprise'}</div>
+                <div className="mt-1 text-sm text-slate-500">{job.company?.companyName || 'Doanh nghiệp'}</div>
               </Link>
             ))}
           </div>

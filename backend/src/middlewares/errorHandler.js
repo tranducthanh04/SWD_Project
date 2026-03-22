@@ -11,7 +11,7 @@ module.exports = (error, _req, res, _next) => {
   const statusCode = error.statusCode || 500;
   return res.status(statusCode).json({
     success: false,
-    message: error.message || 'Internal server error',
+    message: error.message || 'Lỗi máy chủ nội bộ',
     errors: error.errors || null,
     ...(process.env.NODE_ENV !== 'production' && error.stack ? { stack: error.stack } : {}),
   });

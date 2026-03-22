@@ -19,7 +19,7 @@ function ApplicationsPage() {
       setApplications(response.data);
       setError('');
     } catch (err) {
-      setError(getErrorMessage(err, 'Unable to load applications'));
+      setError(getErrorMessage(err, 'Không thể tải đơn ứng tuyển'));
     } finally {
       setLoading(false);
     }
@@ -30,19 +30,21 @@ function ApplicationsPage() {
   }, []);
 
   const handleWithdraw = async (id) => {
-    if (!window.confirm('Withdraw this application?')) return;
+    if (!window.confirm('Bạn có chắc muốn rút đơn ứng tuyển này?')) return;
     try {
       await applicationsApi.withdraw(id);
-      toast.success('Application withdrawn');
+      toast.success('Đã rút đơn ứng tuyển');
       loadApplications();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to withdraw application'));
+      toast.error(getErrorMessage(err, 'Không thể rút đơn ứng tuyển'));
     }
   };
 
   if (loading) return <LoadingSkeleton rows={6} />;
   if (error) return <ErrorState description={error} />;
-  if (!applications.length) return <EmptyState title="No applications yet" description="Apply to a published role to start tracking your process." />;
+  if (!applications.length) {
+    return <EmptyState title="Chưa có đơn ứng tuyển" description="Hãy ứng tuyển vào các vị trí đang tuyển để bắt đầu theo dõi quá trình." />;
+  }
 
   return (
     <div className="space-y-4">
@@ -51,17 +53,19 @@ function ApplicationsPage() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h2 className="text-xl font-semibold text-slate-900">{application.job?.title}</h2>
-              <div className="mt-2 text-sm text-slate-500">Applied: {dateDisplay(application.appliedAt)}</div>
-              <div className="mt-2 text-sm text-slate-500">SLA: {application.responseSla?.businessDaysElapsed}/{application.responseSla?.targetDays} business days</div>
+              <div className="mt-2 text-sm text-slate-500">Ngày ứng tuyển: {dateDisplay(application.appliedAt)}</div>
+              <div className="mt-2 text-sm text-slate-500">
+                SLA phản hồi: {application.responseSla?.businessDaysElapsed}/{application.responseSla?.targetDays} ngày làm việc
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <StatusBadge status={application.status} />
               <Link className="btn-secondary" to={`/applications/${application._id}`}>
-                Detail
+                Chi tiết
               </Link>
               {!application.isWithdrawn ? (
                 <button className="btn-primary" onClick={() => handleWithdraw(application._id)}>
-                  Withdraw
+                  Rút đơn
                 </button>
               ) : null}
             </div>

@@ -38,7 +38,7 @@ const createUploader = ({ folder, allowedMimeTypes, maxSize = 3 * 1024 * 1024 })
         cb(null, true);
         return;
       }
-      cb(new AppError('Unsupported file type', 400));
+      cb(new AppError('Định dạng tệp không được hỗ trợ', 400));
     },
   });
 };

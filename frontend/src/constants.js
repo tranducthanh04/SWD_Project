@@ -1,8 +1,8 @@
 export const roleLabels = {
-  guest: 'Guest',
-  jobseeker: 'Job Seeker',
-  enterprise: 'Enterprise',
-  admin: 'Admin',
+  guest: 'Khách',
+  jobseeker: 'Ứng viên',
+  enterprise: 'Doanh nghiệp',
+  admin: 'Quản trị viên',
 };
 
 export const applicationStatuses = [

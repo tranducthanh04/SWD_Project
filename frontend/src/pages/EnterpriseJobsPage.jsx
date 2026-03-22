@@ -18,7 +18,7 @@ function EnterpriseJobsPage() {
       setJobs(response.data);
       setError('');
     } catch (err) {
-      setError(getErrorMessage(err, 'Unable to load jobs'));
+      setError(getErrorMessage(err, 'Không thể tải danh sách việc làm'));
     } finally {
       setLoading(false);
     }
@@ -31,21 +31,21 @@ function EnterpriseJobsPage() {
   const handleClose = async (id) => {
     try {
       await jobsApi.close(id);
-      toast.success('Job closed');
+      toast.success('Đã đóng tin tuyển dụng');
       loadJobs();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to close job'));
+      toast.error(getErrorMessage(err, 'Không thể đóng tin tuyển dụng'));
     }
   };
 
   const handleDelete = async (id) => {
-    if (!window.confirm('Delete this job?')) return;
+    if (!window.confirm('Bạn có chắc muốn xóa tin tuyển dụng này?')) return;
     try {
       await jobsApi.remove(id);
-      toast.success('Job deleted');
+      toast.success('Đã xóa tin tuyển dụng');
       loadJobs();
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to delete job'));
+      toast.error(getErrorMessage(err, 'Không thể xóa tin tuyển dụng'));
     }
   };
 
@@ -56,7 +56,7 @@ function EnterpriseJobsPage() {
     <div className="space-y-4">
       <div className="flex justify-end">
         <Link to="/enterprise/jobs/new" className="btn-primary">
-          Post a new job
+          Đăng tin tuyển dụng mới
         </Link>
       </div>
       {jobs.map((job) => (
@@ -64,21 +64,21 @@ function EnterpriseJobsPage() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <h2 className="text-xl font-semibold text-slate-900">{job.title}</h2>
-              <div className="mt-2 text-sm text-slate-500">{job.location} | Applicants: {job.applicantCount}</div>
+              <div className="mt-2 text-sm text-slate-500">{job.location} | Ứng viên: {job.applicantCount}</div>
             </div>
             <div className="flex flex-wrap items-center gap-3">
               <StatusBadge status={job.status} />
               <Link className="btn-secondary" to={`/enterprise/jobs/${job._id}/edit`}>
-                Edit
+                Chỉnh sửa
               </Link>
               <Link className="btn-secondary" to={`/enterprise/jobs/${job._id}/applicants`}>
-                Applicants
+                Ứng viên
               </Link>
               <button className="btn-secondary" onClick={() => handleClose(job._id)}>
-                Close
+                Đóng
               </button>
               <button className="btn-primary" onClick={() => handleDelete(job._id)}>
-                Delete
+                Xóa
               </button>
             </div>
           </div>

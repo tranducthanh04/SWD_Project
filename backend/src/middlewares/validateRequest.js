@@ -8,5 +8,5 @@ module.exports = (req, _res, next) => {
     return next();
   }
 
-  return next(new AppError('Validation failed', 422, errors.array()));
+  return next(new AppError('Dữ liệu đầu vào không hợp lệ', 422, errors.array()));
 };

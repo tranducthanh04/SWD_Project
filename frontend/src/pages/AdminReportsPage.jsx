@@ -17,7 +17,7 @@ function AdminReportsPage() {
         const response = await adminApi.reports();
         setReports(response.data);
       } catch (err) {
-        setError(getErrorMessage(err, 'Unable to load reports'));
+        setError(getErrorMessage(err, 'Không thể tải danh sách báo cáo'));
       } finally {
         setLoading(false);
       }
@@ -36,8 +36,8 @@ function AdminReportsPage() {
           <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <div className="text-lg font-semibold text-slate-900">{report.title}</div>
-              <div className="mt-2 text-sm text-slate-500">Reporter: {report.reporter?.fullName}</div>
-              <div className="mt-1 text-sm text-slate-500">Job: {report.job?.title}</div>
+              <div className="mt-2 text-sm text-slate-500">Người báo cáo: {report.reporter?.fullName}</div>
+              <div className="mt-1 text-sm text-slate-500">Tin tuyển dụng: {report.job?.title}</div>
             </div>
             <StatusBadge status={report.status} />
           </div>

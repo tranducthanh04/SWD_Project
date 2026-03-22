@@ -25,25 +25,25 @@ function ResetPasswordPage() {
   const onSubmit = async (values) => {
     try {
       const response = await authApi.resetPassword(values);
-      toast.success(response.message || 'Password reset successfully');
+      toast.success(response.message || 'Đặt lại mật khẩu thành công');
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to reset password'));
+      toast.error(getErrorMessage(err, 'Không thể đặt lại mật khẩu'));
     }
   };
 
   return (
     <div className="container-shell py-16">
       <div className="mx-auto max-w-lg card-panel p-8">
-        <h1 className="text-3xl font-bold text-slate-950">Reset password</h1>
-        <p className="mt-2 text-sm text-slate-500">Enter the reset code from your email and set a new password.</p>
+        <h1 className="text-3xl font-bold text-slate-950">Đặt lại mật khẩu</h1>
+        <p className="mt-2 text-sm text-slate-500">Nhập mã đặt lại được gửi qua email và thiết lập mật khẩu mới.</p>
         <form className="mt-8 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <FormInput label="Username" error={errors.username?.message} {...register('username')} />
+          <FormInput label="Tên đăng nhập" error={errors.username?.message} {...register('username')} />
           <FormInput label="Email" error={errors.email?.message} {...register('email')} />
-          <FormInput label="Reset code" error={errors.code?.message} {...register('code')} />
-          <FormInput label="New password" type="password" error={errors.newPassword?.message} {...register('newPassword')} />
-          <FormInput label="Confirm password" type="password" error={errors.confirmNewPassword?.message} {...register('confirmNewPassword')} />
+          <FormInput label="Mã đặt lại" error={errors.code?.message} {...register('code')} />
+          <FormInput label="Mật khẩu mới" type="password" error={errors.newPassword?.message} {...register('newPassword')} />
+          <FormInput label="Xác nhận mật khẩu mới" type="password" error={errors.confirmNewPassword?.message} {...register('confirmNewPassword')} />
           <button className="btn-primary w-full" disabled={isSubmitting} type="submit">
-            {isSubmitting ? 'Updating...' : 'Reset password'}
+            {isSubmitting ? 'Đang cập nhật...' : 'Đặt lại mật khẩu'}
           </button>
         </form>
       </div>

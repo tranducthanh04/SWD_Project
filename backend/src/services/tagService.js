@@ -14,7 +14,7 @@ const createTag = async (payload, actor) => {
   });
 
   if (exists) {
-    throw new AppError('Tag already exists', 409);
+    throw new AppError('Thẻ đã tồn tại', 409);
   }
 
   const tag = await Tag.create({
@@ -39,7 +39,7 @@ const createTag = async (payload, actor) => {
 const updateTag = async (tagId, payload, actor) => {
   const tag = await Tag.findById(tagId);
   if (!tag) {
-    throw new AppError('Tag not found', 404);
+    throw new AppError('Không tìm thấy thẻ', 404);
   }
 
   if (payload.name) {
@@ -65,7 +65,7 @@ const updateTag = async (tagId, payload, actor) => {
 const deleteTag = async (tagId, actor) => {
   const tag = await Tag.findById(tagId);
   if (!tag) {
-    throw new AppError('Tag not found', 404);
+    throw new AppError('Không tìm thấy thẻ', 404);
   }
 
   await tag.deleteOne();
@@ -78,7 +78,7 @@ const deleteTag = async (tagId, actor) => {
     targetId: tag._id,
   });
 
-  return { message: 'Tag deleted successfully' };
+  return { message: 'Xóa thẻ thành công' };
 };
 
 module.exports = {

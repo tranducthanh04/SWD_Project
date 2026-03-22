@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { jobsApi } from '../api/jobsApi';
 import { experienceLevels, jobTypes } from '../constants';
-import { currency, dateDisplay, getErrorMessage } from '../formatters';
+import { currency, dateDisplay, getErrorMessage, displayExperienceLevel, displayJobType } from '../formatters';
 import FilterPanel from '../components/shared/FilterPanel';
 import SearchBar from '../components/shared/SearchBar';
 import Pagination from '../components/shared/Pagination';
@@ -28,6 +28,9 @@ function JobsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
+  const jobTypeOptions = jobTypes.map((item) => ({ value: item, label: displayJobType(item) }));
+  const experienceLevelOptions = experienceLevels.map((item) => ({ value: item, label: displayExperienceLevel(item) }));
+
   useEffect(() => {
     const fetchJobs = async () => {
       setLoading(true);
@@ -37,7 +40,7 @@ function JobsPage() {
         setMeta(response.meta || { page: 1, totalPages: 1 });
         setError('');
       } catch (err) {
-        setError(getErrorMessage(err, 'Unable to load jobs'));
+        setError(getErrorMessage(err, 'Không thể tải danh sách việc làm'));
       } finally {
         setLoading(false);
       }
@@ -50,27 +53,34 @@ function JobsPage() {
     <div className="container-shell py-12">
       <div className="card-panel p-6">
         <div className="grid gap-4">
-          <SearchBar value={query} onChange={setQuery} placeholder="Search by title, company, tags, or description" />
-          <FilterPanel filters={filters} onChange={(key, value) => setFilters((current) => ({ ...current, [key]: value }))} jobTypes={jobTypes} experienceLevels={experienceLevels} />
+          <SearchBar value={query} onChange={setQuery} placeholder="Tìm theo chức danh, công ty, thẻ hoặc mô tả" />
+          <FilterPanel
+            filters={filters}
+            onChange={(key, value) => setFilters((current) => ({ ...current, [key]: value }))}
+            jobTypes={jobTypeOptions}
+            experienceLevels={experienceLevelOptions}
+          />
         </div>
       </div>
 
       <div className="mt-8 flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-slate-950">Job marketplace</h1>
-        <p className="text-sm text-slate-500">Page {meta.page || 1}</p>
+        <h1 className="text-3xl font-bold text-slate-950">Thị trường việc làm</h1>
+        <p className="text-sm text-slate-500">Trang {meta.page || 1}</p>
       </div>
 
       <div className="mt-8">
         {loading ? <LoadingSkeleton rows={6} /> : null}
         {error ? <ErrorState description={error} /> : null}
-        {!loading && !error && jobs.length === 0 ? <EmptyState title="No matching jobs" description="Try adjusting your search query or filters." /> : null}
+        {!loading && !error && jobs.length === 0 ? (
+          <EmptyState title="Không tìm thấy việc làm phù hợp" description="Hãy thử thay đổi từ khóa tìm kiếm hoặc bộ lọc." />
+        ) : null}
         {!loading && !error && jobs.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
             {jobs.map((job) => (
               <article key={job._id} className="card-panel p-6">
                 <div className="flex items-start justify-between gap-4">
                   <div>
-                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">{job.company?.companyName || 'Enterprise'}</div>
+                    <div className="text-sm font-semibold uppercase tracking-[0.2em] text-brand-700">{job.company?.companyName || 'Doanh nghiệp'}</div>
                     <h2 className="mt-2 text-xl font-semibold text-slate-900">{job.title}</h2>
                   </div>
                   <StatusBadge status={job.status} />
@@ -79,7 +89,8 @@ function JobsPage() {
                 <div className="mt-4 space-y-2 text-sm text-slate-500">
                   <div>{job.location}</div>
                   <div>{currency(job.salaryMin, job.salaryMax, job.currency)}</div>
-                  <div>Deadline: {dateDisplay(job.applicationDeadline)}</div>
+                  <div>{displayJobType(job.jobType)} | {displayExperienceLevel(job.experienceLevel)}</div>
+                  <div>Hạn nộp hồ sơ: {dateDisplay(job.applicationDeadline)}</div>
                 </div>
                 <div className="mt-5 flex flex-wrap gap-2">
                   {(job.tags || []).slice(0, 3).map((tag) => (
@@ -89,7 +100,7 @@ function JobsPage() {
                   ))}
                 </div>
                 <Link to={`/jobs/${job._id}`} className="btn-primary mt-6 w-full">
-                  View detail
+                  Xem chi tiết
                 </Link>
               </article>
             ))}

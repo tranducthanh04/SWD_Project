@@ -3,7 +3,7 @@ function FormSelect({ label, error, options, ...props }) {
     <label className="block">
       <span className="field-label">{label}</span>
       <select className="field-input" {...props}>
-        <option value="">Select</option>
+        <option value="">Chọn</option>
         {options.map((option) => (
           <option key={option.value || option} value={option.value || option}>
             {option.label || option}

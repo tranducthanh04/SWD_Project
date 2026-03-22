@@ -3,7 +3,7 @@ const { ROLE_VALUES } = require('../constants/roles');
 const { PASSWORD_REGEX } = require('../utils/password');
 
 const strongPasswordMessage =
-  'Password must be at least 8 characters and include uppercase, lowercase, number, and special character';
+  'Mật khẩu phải có ít nhất 8 ký tự và bao gồm chữ hoa, chữ thường, số và ký tự đặc biệt';
 
 const registerValidator = [
   body('username').trim().isLength({ min: 3, max: 30 }),
@@ -29,7 +29,7 @@ const resetPasswordValidator = [
   body('newPassword').matches(PASSWORD_REGEX).withMessage(strongPasswordMessage),
   body('confirmNewPassword').custom((value, { req }) => {
     if (value !== req.body.newPassword) {
-      throw new Error('Confirm password does not match new password');
+      throw new Error('Mật khẩu xác nhận không khớp với mật khẩu mới');
     }
     return true;
   }),
@@ -40,7 +40,7 @@ const changePasswordValidator = [
   body('newPassword').matches(PASSWORD_REGEX).withMessage(strongPasswordMessage),
   body('confirmNewPassword').custom((value, { req }) => {
     if (value !== req.body.newPassword) {
-      throw new Error('Confirm password does not match new password');
+      throw new Error('Mật khẩu xác nhận không khớp với mật khẩu mới');
     }
     return true;
   }),

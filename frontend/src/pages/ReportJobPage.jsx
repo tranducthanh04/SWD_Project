@@ -22,21 +22,21 @@ function ReportJobPage() {
   const onSubmit = async (values) => {
     try {
       const response = await reportsApi.create({ ...values, jobId: id });
-      toast.success(response.message || 'Report submitted successfully');
+      toast.success(response.message || 'Đã gửi báo cáo thành công');
     } catch (err) {
-      toast.error(getErrorMessage(err, 'Unable to submit report'));
+      toast.error(getErrorMessage(err, 'Không thể gửi báo cáo'));
     }
   };
 
   return (
     <div className="card-panel max-w-2xl p-6">
-      <h1 className="text-2xl font-bold text-slate-950">Report job listing</h1>
-      <p className="mt-2 text-sm text-slate-500">Each job seeker can report a job once. Provide enough detail for admin review.</p>
+      <h1 className="text-2xl font-bold text-slate-950">Báo cáo tin tuyển dụng</h1>
+      <p className="mt-2 text-sm text-slate-500">Mỗi ứng viên chỉ có thể báo cáo một tin một lần. Vui lòng cung cấp đủ thông tin để quản trị viên xem xét.</p>
       <form className="mt-6 space-y-4" onSubmit={handleSubmit(onSubmit)}>
-        <FormInput label="Report title" error={errors.title?.message} {...register('title')} />
-        <FormTextarea label="Report detail" error={errors.content?.message} {...register('content')} />
+        <FormInput label="Tiêu đề báo cáo" error={errors.title?.message} {...register('title')} />
+        <FormTextarea label="Nội dung báo cáo" error={errors.content?.message} {...register('content')} />
         <button className="btn-primary w-full" disabled={isSubmitting} type="submit">
-          {isSubmitting ? 'Submitting...' : 'Submit report'}
+          {isSubmitting ? 'Đang gửi...' : 'Gửi báo cáo'}
         </button>
       </form>
     </div>

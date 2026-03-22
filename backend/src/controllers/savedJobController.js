@@ -4,7 +4,7 @@ const savedJobService = require('../services/savedJobService');
 
 const saveJob = catchAsync(async (req, res) => {
   const data = await savedJobService.saveJob(req.user._id, req.params.jobId);
-  successResponse(res, { statusCode: 201, message: 'Job saved successfully', data });
+  successResponse(res, { statusCode: 201, message: 'Lưu việc làm thành công', data });
 });
 
 const listSavedJobs = catchAsync(async (req, res) => {

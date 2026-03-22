@@ -49,7 +49,7 @@ const uploadProfileAssets = multer({
       return;
     }
 
-    cb(new AppError('Unsupported profile upload type', 400));
+    cb(new AppError('Định dạng tệp tải lên cho hồ sơ không được hỗ trợ', 400));
   },
 });
 

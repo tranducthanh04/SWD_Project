@@ -9,12 +9,12 @@ const getMyProfile = catchAsync(async (req, res) => {
 
 const updateJobSeekerProfile = catchAsync(async (req, res) => {
   const data = await profileService.updateJobSeekerProfile(req.user._id, req.body, req.files);
-  successResponse(res, { message: 'Profile updated successfully', data });
+  successResponse(res, { message: 'Cập nhật hồ sơ thành công', data });
 });
 
 const requestEnterpriseProfileUpdate = catchAsync(async (req, res) => {
   const data = await profileService.requestEnterpriseProfileUpdate(req.user._id, req.body, req.files);
-  successResponse(res, { statusCode: 201, message: 'Enterprise profile update request submitted', data });
+  successResponse(res, { statusCode: 201, message: 'Đã gửi yêu cầu cập nhật hồ sơ doanh nghiệp', data });
 });
 
 const getEnterpriseRequestStatus = catchAsync(async (req, res) => {

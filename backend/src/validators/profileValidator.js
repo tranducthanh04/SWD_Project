@@ -16,7 +16,7 @@ const enterpriseUpdateRequestValidator = [
   body('companyPhone').optional().trim(),
   body('companyAddress').optional().trim(),
   body('taxCode').optional().trim(),
-  body('website').optional().isURL().withMessage('Website must be a valid URL'),
+  body('website').optional().isURL().withMessage('Website phải là URL hợp lệ'),
   body('description').optional().trim(),
 ];
 

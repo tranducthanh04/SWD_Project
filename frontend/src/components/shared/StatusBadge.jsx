@@ -1,4 +1,4 @@
-import { statusTone } from '../../formatters';
+import { statusTone, displayStatus } from '../../formatters';
 
 const toneClassMap = {
   success: 'bg-emerald-100 text-emerald-700',
@@ -9,7 +9,7 @@ const toneClassMap = {
 
 function StatusBadge({ status }) {
   const tone = statusTone(status);
-  return <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${toneClassMap[tone]}`}>{status}</span>;
+  return <span className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold ${toneClassMap[tone]}`}>{displayStatus(status)}</span>;
 }
 
 export default StatusBadge;
