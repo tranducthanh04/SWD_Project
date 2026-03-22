@@ -268,7 +268,10 @@ const createJob = async (enterpriseUser, payload) => {
 
 const listEnterpriseJobs = async (enterpriseId) => {
   await syncExpiredJobs();
-  const jobs = await Job.find({ enterpriseId }).sort({ createdAt: -1 });
+  const jobs = await Job.find({
+    enterpriseId,
+    status: { $ne: JOB_STATUSES.DELETED },
+  }).sort({ createdAt: -1 });
   return enrichJobs(jobs);
 };
 
